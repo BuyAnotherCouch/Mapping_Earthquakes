@@ -2,29 +2,60 @@
 console.log("working");
 
 // Create the map object with a center and zoom level.
-var myMap = L.map('mapid').setView([37.6213, -122.3790], 5);
+var myMap = L.map('mapid').setView([37.5, -122.5], 10);
 
-    // Define a symbol using SVG path notation, with an opacity of 1.
-    const lineSymbol = {
-        path: "M 0,-1 0,1",
-        strokeOpacity: 1,
-        scale: 4,
-      };
+// Add GeoJSON data.
+let sanFranAirport =
+{"type":"FeatureCollection","features":[{
+    "type":"Feature",
+    "properties":{
+        "id":"3469",
+        "name":"San Francisco International Airport",
+        "city":"San Francisco",
+        "country":"United States",
+        "faa":"SFO",
+        "icao":"KSFO",
+        "alt":"13",
+        "tz-offset":"-8",
+        "dst":"A",
+        "tz":"America/Los_Angeles"},
+        "geometry":{
+            "type":"Point",
+            "coordinates":[-122.375,37.61899948120117]}}
+]};
 
-// Coordinates for each point to be used in the line.
-let line = [
-    [33.9416, -118.4085],
-    [37.6213, -122.3790],
-    [40.7899, -111.9791],
-    [47.4502, -122.3088]
-  ];
+// // Grabbing our GeoJSON data (pointToLayer Function)
+// L.geoJson(sanFranAirport, {
+//     // We turn each feature into a marker on the map.
+//     pointToLayer: function(feature, latlng) {
+//       console.log(feature);
+//       return L.marker(latlng)
+//       .bindPopup("<h2>" + feature.properties.city + "</h2>");
+//     }
+//   }).addTo(myMap);
 
-  // Create a polyline using the line coordinates and make the line red.
-L.polyline(line, {
-    color: "yellow",
-    dashArray: '10, 5',
-    //dashOffset: '15'
+// Grabbing our GeoJSON data (onEachFeature Function)
+L.geoJson(sanFranAirport, {
+    onEachFeature: function(feature, layer) {
+        console.log(layer);
+        layer.bindPopup("<h2>" + feature.properties.city + "</h2>");
+    }
 }).addTo(myMap);
+
+// // Coordinates for each point to be used in the line.
+// let line = [
+//     [33.9416, -118.4085],
+//     [37.6213, -122.3790],
+//     [40.7899, -111.9791],
+//     [47.4502, -122.3088]
+//   ];
+
+//   // Create a polyline using the line coordinates and make the line red.
+// L.polyline(line, {
+//     color: "yellow",
+//     dashArray: '10, 5',
+//     //dashOffset: '15'
+// }).addTo(myMap);
 
 // Get data from cities.js
 let cityData = cities;
@@ -60,7 +91,7 @@ let cityData = cities;
 var streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
-    id: 'satellite-streets-v11',
+    id: 'streets-v11',
     tileSize: 512,
     zoomOffset: -1,
     //opacity: 0.5,
