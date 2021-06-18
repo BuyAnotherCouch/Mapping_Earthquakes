@@ -1,1 +1,3 @@
-permalink: /docs/index.html
+---
+permalink: /index.html
+---
